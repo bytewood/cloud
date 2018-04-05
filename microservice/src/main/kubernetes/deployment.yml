@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microservice
+spec:
+  selector:
+    matchLabels:
+      app: microservice
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: microservice
+    spec:
+      containers:
+      - name: microservice
+        image: bytewood-cloud/microservice:0.0.1-SNAPSHOT
+        imagePullPolicy: IfNotPresent                       # pull from cache
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+          - name: config-volume
+            mountPath: /config
+      volumes:
+        - name: config-volume
+          configMap:
+            name: microservice-config-volume
+            items:
+              - key: application.yml
+                path: application.yml
+
